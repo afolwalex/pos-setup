@@ -12,8 +12,8 @@ import {
 import React, {useEffect, useState} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Geolocation from 'react-native-geolocation-service';
-// import NavContainer from './src/navigation/NavContainer';
-// import RootNav from './src/navigation/NavContainer';
+import NavContainer from './src/navigation/NavContainer.js';
+import RootNav from './src/navigation/NavContainer.js';
 
 const Separator = () => <View style={styles.separator} />;
 
