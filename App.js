@@ -5,8 +5,15 @@ import {
     NativeModules,
     SafeAreaView,
     Button,
+    PermissionsAndroid,
+    TextInput,
+    Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import RNBootSplash from 'react-native-bootsplash';
+import Geolocation from 'react-native-geolocation-service';
+// import NavContainer from './src/navigation/NavContainer';
+// import RootNav from './src/navigation/NavContainer';
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -14,50 +21,49 @@ const Space = () => <View style={styles.space} />;
 
 const App = () => {
     const [text, setText] = useState('');
+    const [value, setValue] = useState('');
+
+    useEffect(() => {
+        RNBootSplash.hide({fade: true});
+    }, []);
 
     const onSetText = text => {
         setText(text);
     };
 
-    const {MorefunReactModule, CalendarModule} = NativeModules;
+    const getLocation = async () => {
+        const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+                title: 'Example App',
+                message: 'Example App access to your location ',
+            },
+        );
 
-    console.log(MorefunReactModule);
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            Geolocation.getCurrentPosition(
+                position => {
+                    Alert.alert('', position.coords.toString());
+                },
+                error => {
+                    console.log(error.code, error.message);
+                    Alert.alert('', error.message);
+                },
+                {timeout: 70000, maximumAge: 10000, enableHighAccuracy: true},
+            );
+        } else {
+            console.log('ACCESS_FINE_LOCATION permission denied');
+        }
+    };
+
+    const changeValue = text => {
+        console.log(text, 'Text');
+    };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Space />
-            <View>
-                <Button
-                    title="Get Device Info"
-                    onPress={() => {
-                        NativeModules.MorefunReactModule.getDeviceInfo().then(
-                            data => {
-                                onSetText(data);
-                            },
-                            error => {
-                                onSetText(data);
-                            },
-                        );
-                        // CalendarModule.createCalendarEvent();
-                    }}
-                />
-                <Space />
-                <Button
-                    title="Read Mag Card"
-                    onPress={() => {
-                        onSetText('Please swipe mag card');
-                        NativeModules.MorefunReactModule.readMagCard().then(
-                            data => {
-                                onSetText(data);
-                            },
-                            error => {
-                                onSetText(data);
-                            },
-                        );
-                    }}
-                />
-            </View>
-        </SafeAreaView>
+        <View>
+            <Text>Test</Text>
+        </View>
     );
 };
 

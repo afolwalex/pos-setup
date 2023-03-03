@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="status_bar_color">#0037BA</color>
+    <color name='background'>#0037BA</color>
+    <color name="bootsplash_background">#FFFFFF</color>
+</resources>
