@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, SafeAreaView, StatusBar} from 'react-native';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import RootNav from './RootNav';
@@ -10,6 +10,11 @@ const NavContainer = () => {
             <SafeAreaView style={styles.container}>
                 <RootNav />
             </SafeAreaView>
+            <StatusBar
+                barStyle={'light-content'}
+                backgroundColor="#0037BA"
+                translucent={true}
+            />
         </NavigationContainer>
     );
 };
@@ -20,6 +25,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: StatusBar.currentHeight,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fff',
     },
 });
