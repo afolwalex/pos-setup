@@ -135,7 +135,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     justifyContent: 'space-between',
                                     marginVertical: 10,
                                 }}>
-                                <TouchableOpacity style={styles.tranBtn}>
+                                <TouchableOpacity
+                                    style={styles.tranBtn}
+                                    activeOpacity={0.8}>
                                     <Ionicons
                                         name="ios-arrow-redo-circle"
                                         color="#0D6C15"

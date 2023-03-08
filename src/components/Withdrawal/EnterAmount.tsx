@@ -1,191 +1,164 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    NativeModules,
-    SafeAreaView,
-    Button,
-    PermissionsAndroid,
-    TextInput,
-    Alert,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import Geolocation from 'react-native-geolocation-service';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import CurrencyInput from 'react-native-currency-input';
+import DropDownPicker from 'react-native-dropdown-picker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Feather from 'react-native-vector-icons/Feather';
 
-const Separator = () => <View style={styles.separator} />;
+interface Props {
+    navigation: any;
+    proceed: any;
+}
 
-const Space = () => <View style={styles.space} />;
+const EnterAmount: React.FC<Props> = ({navigation, proceed}) => {
+    const types = [
+        {id: 'default', label: 'Default', value: 'default'},
+        {id: 'savings', label: 'Savings', value: 'savings'},
+    ];
 
-const Test = () => {
-    const [text, setText] = useState('');
-    const [value, setValue] = useState('');
+    const [amount, setAmount] = useState<number | null>(null);
+    const [accountType, setAccountType] = useState('');
+    const [openDrop, setOpenDrop] = useState(false);
+    const [showKeyboard, setShowKeyboard] = useState(false);
 
-    const onSetText = text => {
-        setText(text);
-    };
-
-    const getLocation = async () => {
-        const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-                title: 'Example App',
-                message: 'Example App access to your location ',
-            },
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            Geolocation.getCurrentPosition(
-                position => {
-                    Alert.alert('', position.coords.toString());
-                },
-                error => {
-                    console.log(error.code, error.message);
-                    Alert.alert('', error.message);
-                },
-                {timeout: 70000, maximumAge: 10000, enableHighAccuracy: true},
-            );
-        } else {
-            console.log('ACCESS_FINE_LOCATION permission denied');
-        }
-    };
-
-    const changeValue = text => {
-        console.log(text, 'Text');
+    const submitHandler = () => {
+        let data = {
+            amount,
+            accountType,
+        };
+        proceed(data);
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Space />
-            <View>
-                <Button
-                    title="Get Device Info"
-                    onPress={() => {
-                        NativeModules.MorefunReactModule.getDeviceInfo().then(
-                            data => {
-                                console.log(data);
-                                onSetText(data);
-                            },
-                            error => {
-                                console.log(error);
-                            },
-                        );
-                    }}
-                />
-                <Space />
-                <Button
-                    title="Check Card"
-                    onPress={() => {
-                        onSetText('Please swipe mag card');
-                        NativeModules.MorefunReactModule.isCardExist().then(
-                            data => {
-                                console.log(data, 'Data');
-                            },
-                            error => {
-                                console.log(error, 'Error');
-                            },
-                        );
-                    }}
-                />
-                <Space />
-                <Button
-                    title="Check Card Number"
-                    onPress={() => {
-                        onSetText('Please swipe mag card');
-                        NativeModules.MorefunReactModule.readIcCard('100').then(
-                            data => {
-                                console.log(data, 'Data');
-                            },
-                            error => {
-                                console.log(error, 'Error');
-                            },
-                        );
-                    }}
-                />
-                <Space />
-                <Button
-                    title="Print"
-                    onPress={() => {
-                        var printData = new Array();
-                        printData.push('MERCHANT NAME：Demo shop name');
-                        printData.push('MERCHANT NO.：20321545656687');
-                        printData.push('TERMINAL NO.：25689753');
-                        printData.push('CARD NUMBER');
-                        printData.push('62179390*****3426');
-                        printData.push('TRANS TYPE');
-                        printData.push('SALE');
-                        printData.push('EXP DATE：2029');
-                        printData.push('BATCH NO：000012');
-                        printData.push('VOUCHER NO：000001');
-                        printData.push('DATE/TIME：2016-05-23 16:50:32');
-                        printData.push('AMOUNT');
-                        printData.push(
-                            '--------------------------------------',
-                        );
-                        printData.push(
-                            ' I ACKNOWLEDGE	SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES',
-                        );
-                        printData.push(' MERCHANT COPY ');
-                        printData.push(
-                            '---X---X---X---X---X--X--X--X--X--X--\n',
-                        );
-                        printData.push('\n');
-
-                        NativeModules.MorefunReactModule.print(printData).then(
-                            data => {
-                                console.log(data, 'Data Fetched');
-                            },
-                            error => {
-                                console.log(error, 'Error Fetched');
-                            },
-                        );
-                    }}
-                />
-                <Space />
-                <Button
-                    title="Check Location"
-                    onPress={() => {
-                        getLocation();
-                    }}
-                />
-                <TextInput
-                    value={value}
-                    onChangeText={text => changeValue(text)}
-                    placeholder="Text"
-                    keyboardType="number-pad"
-                    onSubmitEditing={() => console.log('Works?')}
-                />
+        <View style={{flex: 1}}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingVertical: 10,
+                }}>
+                <TouchableOpacity activeOpacity={0.8} onPress={navigation}>
+                    <AntDesign name="arrowleft" color={'#000'} size={20} />
+                </TouchableOpacity>
+                <Text style={[styles.textBold, {marginLeft: 10, fontSize: 15}]}>
+                    Withdrawal
+                </Text>
             </View>
-        </SafeAreaView>
+            <View style={styles.body}>
+                <Text style={styles.label}>Enter Amount:</Text>
+                <View style={{position: 'relative'}}>
+                    <CurrencyInput
+                        value={amount}
+                        style={styles.input}
+                        onChangeValue={val => setAmount(val)}
+                        prefix={'₦ '}
+                        signPosition="beforePrefix"
+                        delimiter=","
+                        precision={2}
+                        separator="."
+                        placeholder="Enter amount to withdraw"
+                        placeholderTextColor={'#525252'}
+                        showSoftInputOnFocus={showKeyboard}
+                    />
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={{position: 'absolute', right: 10, top: 15}}
+                        onPress={() => setShowKeyboard(!showKeyboard)}>
+                        <MaterialCommunityIcons
+                            name={showKeyboard ? 'keyboard' : 'keyboard-off'}
+                            size={20}
+                            color="#000"
+                        />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.label}>Account Type:</Text>
+                <View style={{marginBottom: 20, zIndex: 9991}}>
+                    <DropDownPicker
+                        open={openDrop}
+                        value={accountType}
+                        items={types}
+                        setOpen={setOpenDrop}
+                        setValue={setAccountType}
+                        disableBorderRadius={true}
+                        style={styles.input}
+                        dropDownContainerStyle={{
+                            backgroundColor: '#fff',
+                            zIndex: 1000,
+                            elevation: 5,
+                        }}
+                        placeholder="Select Account Type"
+                        searchable={false}
+                        theme={'LIGHT'}
+                        placeholderStyle={{color: '#545454'}}
+                    />
+                </View>
+                <View style={styles.bottom}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={styles.btn}
+                        onPress={submitHandler}>
+                        <Text
+                            style={[
+                                styles.text,
+                                {color: '#fff', marginRight: 10},
+                            ]}>
+                            Proceed to Withdraw
+                        </Text>
+                        <Feather
+                            name="arrow-right-circle"
+                            color="#fff"
+                            size={18}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
     );
 };
 
-export default Test;
+export default EnterAmount;
 
 const styles = StyleSheet.create({
-    container: {
+    text: {
+        fontFamily: 'Inter-Medium',
+        fontSize: 13,
+        color: '#545454',
+    },
+    textBold: {
+        fontFamily: 'Inter-Bold',
+        fontSize: 13,
+        color: '#000',
+    },
+    body: {
         flex: 1,
-        justifyContent: 'flex-start',
-        marginHorizontal: 16,
+        paddingTop: 30,
+        minHeight: 300,
     },
-    title: {
-        textAlign: 'center',
-        marginVertical: 8,
+    input: {
+        height: 50,
+        marginBottom: 20,
+        shadowRadius: 1,
+        shadowOpacity: 0.2,
+        borderWidth: 1,
+        borderRadius: 3,
+        fontFamily: 'Inter-Regular',
+        paddingLeft: 15,
+        borderColor: '#545454',
     },
-    fixToText: {
+    label: {
+        color: '#545454',
+        fontSize: 11,
+        marginBottom: 6,
+    },
+    bottom: {justifyContent: 'center', alignItems: 'center', marginTop: 40},
+    btn: {
+        backgroundColor: '#0037ba',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    separator: {
-        marginVertical: 8,
-        borderBottomColor: '#737373',
-        borderBottomWidth: StyleSheet.hairlineWidth,
-    },
-    resultText: {
-        color: 'white',
-        fontSize: 12,
-        alignSelf: 'flex-start',
-    },
-    space: {
-        marginVertical: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 50,
+        paddingVertical: 10,
+        borderRadius: 20,
     },
 });

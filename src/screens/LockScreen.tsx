@@ -99,6 +99,7 @@ const LockScreen: React.FC<Props> = ({navigation}) => {
                                     maxLength={4}
                                     showSoftInputOnFocus={showKeyboard}
                                     onSubmitEditing={unlockHandler}
+                                    autoFocus={true}
                                 />
                                 <TouchableOpacity
                                     activeOpacity={0.8}

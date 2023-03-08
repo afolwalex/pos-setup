@@ -1,32 +1,50 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import EnterAmount from '../components/Withdrawal/EnterAmount';
-import Test from './Test';
+import {
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import React, {useState} from 'react';
 
-const Withdraw = () => {
+import EnterAmount from '../components/Withdrawal/EnterAmount';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation/RootNav';
+import InsertCard from '../components/Withdrawal/InsertCard';
+
+interface Props {
+    navigation: StackNavigationProp<RootStackParamList, 'Withdraw'>;
+}
+
+const Withdraw: React.FC<Props> = ({navigation}) => {
+    const [step, setStep] = useState(1);
+
+    const firstStep = (data: any) => {
+        console.log(data);
+        setStep(2);
+    };
+
+    const secondStep = () => {
+        setStep(3);
+    };
+
     return (
         <View style={{flex: 1, backgroundColor: '#0037ba'}}>
-            <View style={styles.head}>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingVertical: 10,
-                    }}>
-                    <AntDesign name="arrowleft" color={'#000'} size={20} />
-                    <Text
-                        style={[
-                            styles.textBold,
-                            {marginLeft: 10, fontSize: 15},
-                        ]}>
-                        Withdrawal
-                    </Text>
-                </View>
-            </View>
-            <View style={styles.body}>
+            <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {/* <EnterAmount /> */}
+                    {step === 1 ? (
+                        <EnterAmount
+                            navigation={() => navigation.goBack()}
+                            proceed={firstStep}
+                        />
+                    ) : step === 2 ? (
+                        <InsertCard
+                            navigation={() => setStep(1)}
+                            proceed={secondStep}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </ScrollView>
             </View>
         </View>
@@ -36,7 +54,7 @@ const Withdraw = () => {
 export default Withdraw;
 
 const styles = StyleSheet.create({
-    head: {
+    container: {
         flex: 1,
         backgroundColor: '#fff',
         marginTop: 10,
@@ -45,15 +63,4 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
     },
-    text: {
-        fontFamily: 'Inter-Medium',
-        fontSize: 13,
-        color: '#545454',
-    },
-    textBold: {
-        fontFamily: 'Inter-Bold',
-        fontSize: 13,
-        color: '#000',
-    },
-    body: {},
 });
