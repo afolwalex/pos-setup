@@ -15,6 +15,7 @@ const EnterAmount: React.FC<Props> = ({navigation, proceed}) => {
     const types = [
         {id: 'default', label: 'Default', value: 'default'},
         {id: 'savings', label: 'Savings', value: 'savings'},
+        {id: 'current', label: 'Current', value: 'current'},
     ];
 
     const [amount, setAmount] = useState<number | null>(null);
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         paddingTop: 30,
-        minHeight: 300,
+        minHeight: 450,
     },
     input: {
         height: 50,

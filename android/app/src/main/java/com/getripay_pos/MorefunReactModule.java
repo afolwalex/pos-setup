@@ -188,7 +188,7 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
                         @Override
                         public void onConfirmCardNo(String s) throws RemoteException {
                             try {
-                                json.put("CardNo:", s);
+                                json.put("CardNo", s);
                                 promise.resolve(json.toString());
 
                             } catch (JSONException e) {

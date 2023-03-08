@@ -4,7 +4,6 @@ import {
     View,
     TouchableOpacity,
     ActivityIndicator,
-    Button,
 } from 'react-native';
 import React, {useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
