@@ -5,7 +5,7 @@ import NavContainer from './src/navigation/NavContainer';
 
 const App = () => {
     useEffect(() => {
-        RNBootSplash.hide({fade: true});
+        RNBootSplash.hide();
     }, []);
 
     return <NavContainer />;
