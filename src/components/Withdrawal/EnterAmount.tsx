@@ -24,28 +24,30 @@ const EnterAmount: React.FC<Props> = ({navigation, proceed}) => {
     const [showKeyboard, setShowKeyboard] = useState(false);
 
     const submitHandler = () => {
-        let data = {
-            amount,
-            accountType,
-        };
-        proceed(data);
+        if (amount && accountType) {
+            let data = {
+                amount,
+                accountType,
+            };
+            proceed(data);
+        }
     };
 
     return (
         <View style={{flex: 1}}>
-            <View
+            <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={navigation}
                 style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                     paddingVertical: 10,
                 }}>
-                <TouchableOpacity activeOpacity={0.8} onPress={navigation}>
-                    <AntDesign name="arrowleft" color={'#000'} size={20} />
-                </TouchableOpacity>
+                <AntDesign name="arrowleft" color={'#000'} size={22} />
                 <Text style={[styles.textBold, {marginLeft: 10, fontSize: 15}]}>
                     Withdrawal
                 </Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.body}>
                 <Text style={styles.label}>Enter Amount:</Text>
                 <View style={{position: 'relative'}}>
@@ -92,6 +94,7 @@ const EnterAmount: React.FC<Props> = ({navigation, proceed}) => {
                         searchable={false}
                         theme={'LIGHT'}
                         placeholderStyle={{color: '#545454'}}
+                        listMode="MODAL"
                     />
                 </View>
                 <View style={styles.bottom}>

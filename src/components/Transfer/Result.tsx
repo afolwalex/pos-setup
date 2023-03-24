@@ -4,7 +4,6 @@ import Logo from '../../assets/logo.svg';
 import {TouchableOpacity} from 'react-native';
 import formatCurrency from '../../utils/formatCurrency';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {useAppSelector} from '../../redux/hooks';
 
 interface Props {
     navigation: any;
@@ -15,19 +14,17 @@ const Result: React.FC<Props> = ({navigation, amount}) => {
     const [forWho, setForWho] = useState('customer');
     const [load, setLoad] = useState(false);
 
-    const {agent_details} = useAppSelector(state => state.basic);
-
-    useEffect(() => {
-        //printHandler();
-    }, []);
+    // useEffect(() => {
+    //     printHandler();
+    // }, []);
 
     const printHandler = () => {
         setLoad(true);
         let data = {
             forWho: forWho === 'merchant' ? 'Merchant Copy' : 'Customer Copy',
-            name: agent_details.business_name,
-            location: agent_details.location,
-            terminal: agent_details.serial_no,
+            name: 'Babajide Damilola',
+            location: 'Motorways, 7UP Bustop, Ikeja, Lagos',
+            terminal: '240429490244',
             amount: `₦${formatCurrency(amount)}`,
             cardNo: '53998388*****0022',
             expiry: '05/26',
@@ -64,7 +61,7 @@ const Result: React.FC<Props> = ({navigation, amount}) => {
                 paddingVertical: 20,
                 position: 'relative',
                 flex: 1,
-                height: '100%',
+                minHeight: 450,
             }}>
             <View
                 style={{
@@ -77,7 +74,7 @@ const Result: React.FC<Props> = ({navigation, amount}) => {
                 </TouchableOpacity>
             </View>
             <Logo height={30} />
-            <Text style={styles.textBold}>Withdraw Succesful</Text>
+            <Text style={styles.textBold}>Transfer Succesful</Text>
             <Text style={styles.text}>
                 Lorem ipsum dolor sit amet consectetur. Convallis eu nascetur
                 nibh hac scelerisque suscipit suspendisse.

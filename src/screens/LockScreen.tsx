@@ -4,8 +4,10 @@ import {
     View,
     TouchableOpacity,
     ActivityIndicator,
+    ToastAndroid,
+    NativeModules,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Logo from '../assets/logo.svg';
 import Welcome from '../assets/welcome.svg';
@@ -14,34 +16,54 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {Modal} from 'react-native';
 import {TextInput} from 'react-native';
 import {RootStackParamList} from '../navigation/RootNav';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {loginAgent} from '../redux/basic/basicSlice';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, 'LockScreen'>;
 }
 
 const LockScreen: React.FC<Props> = ({navigation}) => {
+    const dispatch = useAppDispatch();
+
+    const {loading, agent_details} = useAppSelector(state => state.basic);
+
     const [openModal, setOpenModal] = useState(false);
     const [pin, setPin] = useState('');
     const [showKeyboard, setShowKeyboard] = useState(false);
-    const [loader, setLoader] = useState(false);
+    const [sn, setSn] = useState('');
+
+    useEffect(() => {
+        getTerminalInfo();
+    }, []);
 
     const unlockHandler = () => {
         if (pin.length === 4) {
-            setLoader(true);
             setOpenModal(false);
-
-            setTimeout(() => {
-                setLoader(false);
-                setPin('');
-                navigation.navigate('Dashboard');
-            }, 3000);
+            dispatch(loginAgent({serialNo: sn, pin}));
+            setPin('');
         }
+    };
+
+    const getTerminalInfo = () => {
+        NativeModules.MorefunReactModule.getDeviceInfo().then(
+            (data: any) => {
+                let res = JSON.parse(data);
+                setSn(res.sn);
+            },
+            (error: any) => {
+                console.log(error);
+            },
+        );
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.head}>
                 <Logo height={30} />
+            </View>
+            <View style={styles.image}>
+                <Welcome height={'100%'} />
                 <Text
                     style={[
                         styles.text,
@@ -50,19 +72,17 @@ const LockScreen: React.FC<Props> = ({navigation}) => {
                     Enjoy seamless and stress-free transactions
                 </Text>
             </View>
-            <View style={styles.image}>
-                <Welcome height={'100%'} />
-            </View>
             <View style={styles.bottom}>
                 <TouchableOpacity
                     activeOpacity={0.8}
+                    disabled={loading}
                     style={styles.btn}
                     onPress={() => setOpenModal(!openModal)}>
                     <Text
                         style={[styles.text, {color: '#fff', marginRight: 10}]}>
                         Unlock
                     </Text>
-                    {loader ? (
+                    {loading ? (
                         <ActivityIndicator color="#fff" size={20} />
                     ) : (
                         <EvilIcons name="arrow-right" color="#fff" size={20} />
@@ -135,12 +155,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     head: {
-        flex: 2,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     image: {
-        flex: 4,
+        flex: 3,
         justifyContent: 'center',
         alignItems: 'center',
     },

@@ -4,8 +4,9 @@ import {
     TouchableOpacity,
     View,
     NativeModules,
+    ToastAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Img from '../../assets/insert-card.svg';
 import Loader from '../Loader';
@@ -18,10 +19,43 @@ interface Props {
 
 const InsertCard: React.FC<Props> = ({navigation, proceed, amount}) => {
     const [loadCard, setLoadCard] = useState(false);
+    const [counter, setCounter] = useState(0);
+
+    let timer = useRef<number | any>(undefined);
+
+    useEffect(() => {
+        if (!timer.current) {
+            timer.current = setInterval(() => {
+                setCounter(prev => {
+                    if (prev < 100) {
+                        return prev + 5;
+                    }
+                    if (prev === 100) {
+                        clearInterval(timer.current);
+                    }
+                    return prev;
+                });
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(timer.current);
+        };
+    }, []);
 
     useEffect(() => {
         checkCard();
     }, []);
+
+    useEffect(() => {
+        if (counter === 100) {
+            navigation();
+            ToastAndroid.show(
+                'Request took too long. Please try again!',
+                ToastAndroid.LONG,
+            );
+        }
+    }, [counter]);
 
     const checkAgain = () => {
         setTimeout(() => {
@@ -52,13 +86,15 @@ const InsertCard: React.FC<Props> = ({navigation, proceed, amount}) => {
         NativeModules.MorefunReactModule.readIcCard(`${amount}`).then(
             (data: any) => {
                 let result = data ? JSON.parse(data) : {};
-                console.log(result.CardNo, 'Result');
                 if (result.CardNo) {
                     proceed(result.CardNo);
                     setLoadCard(false);
+                } else {
+                    ToastAndroid.show('Unable to load card', ToastAndroid.LONG);
                 }
             },
             (error: any) => {
+                setLoadCard(false);
                 console.log(error, 'Error');
             },
         );
@@ -73,7 +109,7 @@ const InsertCard: React.FC<Props> = ({navigation, proceed, amount}) => {
                     paddingVertical: 10,
                 }}>
                 <TouchableOpacity activeOpacity={0.8} onPress={navigation}>
-                    <AntDesign name="arrowleft" color={'#000'} size={20} />
+                    <AntDesign name="arrowleft" color={'#000'} size={24} />
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>

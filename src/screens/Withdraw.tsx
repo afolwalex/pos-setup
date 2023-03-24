@@ -1,10 +1,4 @@
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 
 import EnterAmount from '../components/Withdrawal/EnterAmount';
@@ -24,18 +18,15 @@ const Withdraw: React.FC<Props> = ({navigation}) => {
     const [load, setLoad] = useState(false);
 
     const firstStep = (data: any) => {
-        console.log(data);
         setAmount(data.amount);
         setStep(2);
     };
 
     const secondStep = (cardNo: string) => {
-        console.log(cardNo);
         setStep(3);
     };
 
     const withdrawHandler = (pin: string) => {
-        console.log(pin);
         setLoad(true);
         setTimeout(() => {
             setLoad(false);
@@ -70,6 +61,7 @@ const Withdraw: React.FC<Props> = ({navigation}) => {
                     ) : step === 4 ? (
                         <Result
                             navigation={() => navigation.navigate('Dashboard')}
+                            amount={amount}
                         />
                     ) : (
                         <></>

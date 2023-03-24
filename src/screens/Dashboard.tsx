@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
@@ -19,12 +19,23 @@ import Icon4 from '../assets/octicon_log-16.svg';
 import Icon5 from '../assets/fluent-mdl2_money.svg';
 import Icon6 from '../assets/fluent_sport-soccer-20-filled.svg';
 import {RootStackParamList} from '../navigation/RootNav';
+import {useAppSelector} from '../redux/hooks';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, 'Dashboard'>;
 }
 
 const Dashboard: React.FC<Props> = ({navigation}) => {
+    const [showAccount, setShowAccount] = useState(true);
+
+    const {agent_details} = useAppSelector(state => state.basic);
+
+    useEffect(() => {
+        // if (agent_details.requires_pin_change) {
+        //     navigation.navigate('ChangePin', {type: 'lock'});
+        // }
+    }, []);
+
     return (
         <View style={{flex: 1}}>
             <ImageBackground
@@ -63,23 +74,28 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                         marginLeft: 6,
                                     },
                                 ]}>
-                                Emmanuel Olajide
+                                {agent_details.business_name}
                             </Text>
                         </TouchableOpacity>
                         <View style={{flexDirection: 'row'}}>
-                            <TouchableOpacity activeOpacity={0.8}>
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={() => navigation.navigate('Settings')}>
                                 <AntDesign
                                     name="setting"
-                                    size={18}
+                                    size={22}
                                     color="#fff"
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 activeOpacity={0.8}
-                                style={{marginLeft: 6}}>
+                                onPress={() =>
+                                    navigation.navigate('TransactionDetails')
+                                }
+                                style={{marginLeft: 12}}>
                                 <FontAwesome5
                                     name="bell"
-                                    size={18}
+                                    size={22}
                                     color="#fff"
                                 />
                             </TouchableOpacity>
@@ -91,7 +107,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                             alignItems: 'center',
                             paddingTop: 30,
                         }}>
-                        <View
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => setShowAccount(!showAccount)}
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
@@ -105,17 +123,22 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                         marginRight: 8,
                                     },
                                 ]}>
-                                01383992038
+                                {showAccount
+                                    ? agent_details.account_number
+                                    : '0000000000'}
                             </Text>
-                            <TouchableOpacity activeOpacity={0.8}>
-                                <Feather name="eye" color={'#fff'} size={16} />
-                            </TouchableOpacity>
-                        </View>
+                            <Feather
+                                name={showAccount ? 'eye' : 'eye-off'}
+                                color={'#fff'}
+                                size={16}
+                            />
+                        </TouchableOpacity>
                         <Text
                             style={{
                                 fontFamily: 'Inter-Light',
                                 color: '#fff',
                                 fontSize: 10,
+                                marginTop: 5,
                             }}>
                             Your Account Number
                         </Text>
@@ -137,16 +160,24 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 }}>
                                 <TouchableOpacity
                                     style={styles.tranBtn}
+                                    onPress={() =>
+                                        navigation.navigate('Transfer')
+                                    }
                                     activeOpacity={0.8}>
                                     <Ionicons
                                         name="ios-arrow-redo-circle"
                                         color="#0D6C15"
                                         style={styles.tranIcon}
+                                        size={18}
                                     />
                                     <Text
                                         style={[
-                                            styles.text,
-                                            {color: '#fff', fontSize: 11},
+                                            styles.textBold,
+                                            {
+                                                color: '#fff',
+                                                fontSize: 13,
+                                                marginTop: 10,
+                                            },
                                         ]}>
                                         Transfer
                                     </Text>
@@ -161,11 +192,16 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                         name="ios-arrow-undo-circle"
                                         color="#DD3A23"
                                         style={styles.tranIcon}
+                                        size={20}
                                     />
                                     <Text
                                         style={[
-                                            styles.text,
-                                            {color: '#fff', fontSize: 11},
+                                            styles.textBold,
+                                            {
+                                                color: '#fff',
+                                                fontSize: 13,
+                                                marginTop: 10,
+                                            },
                                         ]}>
                                         Card Withdrawal
                                     </Text>
@@ -182,6 +218,11 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 }}>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
+                                    onPress={() =>
+                                        navigation.navigate('Bills', {
+                                            type: 'Cable TV',
+                                        })
+                                    }
                                     style={[
                                         styles.others,
                                         {
@@ -192,9 +233,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon1 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#5C1E9B',
                                             },
@@ -204,6 +245,11 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
+                                    onPress={() =>
+                                        navigation.navigate('Bills', {
+                                            type: 'Airtime',
+                                        })
+                                    }
                                     style={[
                                         styles.others,
                                         {
@@ -214,9 +260,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon2 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#0D6C15',
                                             },
@@ -233,6 +279,11 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 }}>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
+                                    onPress={() =>
+                                        navigation.navigate('Bills', {
+                                            type: 'Electricity',
+                                        })
+                                    }
                                     style={[
                                         styles.others,
                                         {
@@ -243,9 +294,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon3 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#871822',
                                             },
@@ -256,6 +307,11 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
 
                                 <TouchableOpacity
                                     activeOpacity={0.8}
+                                    onPress={() =>
+                                        navigation.navigate('Bills', {
+                                            type: 'Sports Betting',
+                                        })
+                                    }
                                     style={[
                                         styles.others,
                                         {
@@ -266,9 +322,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon6 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#604CF6',
                                             },
@@ -278,7 +334,7 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 </TouchableOpacity>
                             </View>
                             <Text style={[styles.text, {marginVertical: 10}]}>
-                                Others
+                                Quick Links
                             </Text>
                             <View
                                 style={{
@@ -288,6 +344,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 }}>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
+                                    onPress={() =>
+                                        navigation.navigate('CardBalance')
+                                    }
                                     style={[
                                         styles.others,
                                         {
@@ -298,9 +357,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon5 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#7D8527',
                                             },
@@ -320,9 +379,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     <Icon4 />
                                     <Text
                                         style={[
-                                            styles.text,
+                                            styles.textBold,
                                             {
-                                                fontSize: 12,
+                                                fontSize: 14,
                                                 marginTop: 5,
                                                 color: '#DD3A23',
                                             },
@@ -366,17 +425,17 @@ const styles = StyleSheet.create({
     tranBtn: {
         backgroundColor: '#0037ba',
         width: '48%',
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10,
+        paddingVertical: 17,
         borderRadius: 4,
     },
     tranIcon: {
         backgroundColor: '#fff',
         marginRight: 5,
         padding: 4,
-        borderRadius: 10,
+        borderRadius: 15,
     },
     others: {
         width: '48%',
@@ -384,6 +443,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 3,
         paddingHorizontal: 5,
-        paddingVertical: 10,
+        paddingVertical: 15,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
     },
 });
