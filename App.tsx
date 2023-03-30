@@ -1,4 +1,4 @@
-import {LogBox, View, Text} from 'react-native';
+import {LogBox} from 'react-native';
 import React, {useEffect} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import NavContainer from './src/navigation/NavContainer';
@@ -19,9 +19,6 @@ const App = () => {
         <Provider store={store}>
             <PersistGate persistor={persistor}>
                 <NavContainer />
-                {/* <View>
-                    <Text>What's happening here?</Text>
-                </View> */}
             </PersistGate>
         </Provider>
     );

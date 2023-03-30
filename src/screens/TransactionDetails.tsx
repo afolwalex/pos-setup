@@ -1,4 +1,4 @@
-import {Modal, StyleSheet, Text, View} from 'react-native';
+import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {ImageBackground} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -7,6 +7,7 @@ import {ScrollView} from 'react-native';
 import {RootStackParamList} from '../navigation/RootNav';
 import Detail from '../components/TransactionDetails/Detail';
 import Filter from '../components/TransactionDetails/Filter';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, 'TransactionDetails'>;
@@ -29,7 +30,7 @@ const TransactionDetails: React.FC<Props> = ({navigation}) => {
                     }}>
                     <Balance
                         navigation={navigation}
-                        click={() => setOpenModal(!openModal)}
+                        click={() => navigation.navigate('Analytics')}
                     />
                 </View>
                 <View style={styles.whiteBg}>
@@ -39,9 +40,38 @@ const TransactionDetails: React.FC<Props> = ({navigation}) => {
                                 paddingHorizontal: 20,
                                 paddingVertical: 20,
                             }}>
-                            <Text style={[styles.textBold, {marginBottom: 10}]}>
-                                Transactions
-                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 10,
+                                }}>
+                                <Text style={[styles.textBold]}>
+                                    Transactions
+                                </Text>
+                                <TouchableOpacity
+                                    activeOpacity={0.8}
+                                    style={styles.filter}
+                                    onPress={() => setOpenModal(!openModal)}>
+                                    <Text
+                                        style={[
+                                            styles.text,
+                                            {
+                                                color: '#545454',
+                                                fontSize: 11,
+                                                marginRight: 4,
+                                            },
+                                        ]}>
+                                        Filter
+                                    </Text>
+                                    <AntDesign
+                                        name="filter"
+                                        size={15}
+                                        color="#545454"
+                                    />
+                                </TouchableOpacity>
+                            </View>
                             <Detail />
                         </View>
                     </ScrollView>
@@ -92,5 +122,13 @@ const styles = StyleSheet.create({
         height: '90%',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
+    },
+    filter: {
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: '#545454',
+        paddingHorizontal: 15,
+        paddingVertical: 3,
+        borderRadius: 10,
     },
 });

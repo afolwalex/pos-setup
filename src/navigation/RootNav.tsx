@@ -11,6 +11,7 @@ import CardBalance from '../screens/CardBalance';
 import {useAppSelector} from '../redux/hooks';
 import ChangePin from '../screens/ChangePin';
 import Settings from '../screens/Settings';
+import Analytics from '../screens/Analytics';
 
 export type RootStackParamList = {
     LockScreen: undefined;
@@ -22,6 +23,7 @@ export type RootStackParamList = {
     CardBalance: undefined;
     ChangePin: {type: string};
     Settings: undefined;
+    Analytics: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -35,18 +37,24 @@ const RootNav = () => {
                 headerShown: false,
                 presentation: 'card',
             }}>
-            <Stack.Screen name="LockScreen" component={LockScreen} />
-            <Stack.Screen name="Dashboard" component={Dashboard} />
-            <Stack.Screen name="Withdraw" component={Withdraw} />
-            <Stack.Screen name="Transfer" component={Transfer} />
-            <Stack.Screen
-                name="TransactionDetails"
-                component={TransactionDetails}
-            />
-            <Stack.Screen name="Bills" component={Bills} />
-            <Stack.Screen name="CardBalance" component={CardBalance} />
-            <Stack.Screen name="ChangePin" component={ChangePin} />
-            <Stack.Screen name="Settings" component={Settings} />
+            {!agent_details || !agent_details.agent ? (
+                <Stack.Screen name="LockScreen" component={LockScreen} />
+            ) : (
+                <>
+                    <Stack.Screen name="Dashboard" component={Dashboard} />
+                    <Stack.Screen name="Withdraw" component={Withdraw} />
+                    <Stack.Screen name="Transfer" component={Transfer} />
+                    <Stack.Screen
+                        name="TransactionDetails"
+                        component={TransactionDetails}
+                    />
+                    <Stack.Screen name="Bills" component={Bills} />
+                    <Stack.Screen name="CardBalance" component={CardBalance} />
+                    <Stack.Screen name="ChangePin" component={ChangePin} />
+                    <Stack.Screen name="Settings" component={Settings} />
+                    <Stack.Screen name="Analytics" component={Analytics} />
+                </>
+            )}
         </Stack.Navigator>
     );
 };

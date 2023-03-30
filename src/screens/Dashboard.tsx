@@ -31,9 +31,9 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
     const {agent_details} = useAppSelector(state => state.basic);
 
     useEffect(() => {
-        // if (agent_details.requires_pin_change) {
-        //     navigation.navigate('ChangePin', {type: 'lock'});
-        // }
+        if (agent_details.terminal.pinChange) {
+            navigation.navigate('ChangePin', {type: 'lock'});
+        }
     }, []);
 
     return (
@@ -74,7 +74,7 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                         marginLeft: 6,
                                     },
                                 ]}>
-                                {agent_details.business_name}
+                                {agent_details.agent.businessName}
                             </Text>
                         </TouchableOpacity>
                         <View style={{flexDirection: 'row'}}>
@@ -124,7 +124,7 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                     },
                                 ]}>
                                 {showAccount
-                                    ? agent_details.account_number
+                                    ? agent_details.agentTerminal.accountNumber
                                     : '0000000000'}
                             </Text>
                             <Feather

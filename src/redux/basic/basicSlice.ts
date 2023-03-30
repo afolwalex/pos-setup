@@ -23,6 +23,20 @@ export const loginAgent = createAsyncThunk(
     },
 );
 
+// Get Agent
+export const getAgent = createAsyncThunk(
+    'basic/agentDetails',
+    async (data: any, thunkAPI) => {
+        try {
+            const res = await basicService.getAgent(data.id);
+            return res;
+        } catch (error) {
+            const message: string = displayError(error, false);
+            return thunkAPI.rejectWithValue(message);
+        }
+    },
+);
+
 export const basicSlice = createSlice({
     name: 'basic',
     initialState,
@@ -44,6 +58,9 @@ export const basicSlice = createSlice({
         builder.addCase(loginAgent.rejected, (state, action) => {
             state.loading = false;
             state.error = 'Error has Occured';
+        });
+        builder.addCase(getAgent.fulfilled, (state, action) => {
+            state.agent_details = action.payload;
         });
     },
 });

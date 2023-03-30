@@ -65,7 +65,17 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getDeviceInfo(Promise promise) {
         Log.d("TAG", "###getDeviceInfo>>>");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getAllDeviceInfo(promise);
+            }
+        }).start();
+    }
+
+    public void getAllDeviceInfo(Promise promise){
         try {
+
             Bundle devInfo = DeviceHelper.getDeviceService().getDevInfo();
             String vendor = devInfo.getString(DeviceInfoConstrants.COMMOM_VENDOR);
             String model = devInfo.getString(DeviceInfoConstrants.COMMOM_MODEL);
@@ -74,7 +84,7 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
             String tusn = devInfo.getString(DeviceInfoConstrants.TID_SN);
             String versionCode = devInfo.getString(DeviceInfoConstrants.COMMON_SERVICE_VER);
             String hardware = devInfo.getString("hardware");
-            
+
             JSONObject json = new JSONObject();
             json.put("vendor", vendor);
             json.put("model", model);
@@ -89,7 +99,7 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
         } catch (JSONException e) {
             e.printStackTrace();
             promise.reject(e);
-		}
+        }
     }
 
     @ReactMethod

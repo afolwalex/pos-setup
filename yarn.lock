@@ -6391,6 +6391,13 @@ react-native-currency-input@^1.1.0:
   resolved "https://registry.npmjs.org/react-native-currency-input/-/react-native-currency-input-1.1.0.tgz"
   integrity sha512-TNyqQ98pB6WdLJiEz5NIZWUT1zpzJNBUCGS+5PGO0QCmbssSA/n4zVC7+msX5Z0Wl+iwhpTPsCckDJeRIlxwKg==
 
+react-native-date-picker@^4.2.10:
+  version "4.2.10"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.2.10.tgz#e84cba21ce413d72b2da1c784af3a8a4b2020df3"
+  integrity sha512-Qtu5mvuESjhSKCsecl5+V3kcGxjB3yUUJbbAq6u8JVZj9/fRf8+IV/yfDSREqMoiLM1ljMumxFT2Qdqkw/++Lw==
+  dependencies:
+    prop-types "^15.8.1"
+
 react-native-dropdown-picker@^5.4.4:
   version "5.4.4"
   resolved "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.4.tgz"

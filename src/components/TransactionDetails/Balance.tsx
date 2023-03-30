@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface Props {
     navigation: any;
@@ -47,9 +48,9 @@ const Balance: React.FC<Props> = ({navigation, click}) => {
                             styles.text,
                             {color: '#fff', fontSize: 11, marginRight: 4},
                         ]}>
-                        Filter
+                        Analytics
                     </Text>
-                    <AntDesign name="filter" size={15} color="#fff" />
+                    <Ionicons name="analytics" size={15} color="#fff" />
                 </TouchableOpacity>
             </View>
             <View

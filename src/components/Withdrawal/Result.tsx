@@ -25,9 +25,9 @@ const Result: React.FC<Props> = ({navigation, amount}) => {
         setLoad(true);
         let data = {
             forWho: forWho === 'merchant' ? 'Merchant Copy' : 'Customer Copy',
-            name: agent_details.business_name,
-            location: agent_details.location,
-            terminal: agent_details.serial_no,
+            name: agent_details.agent.businessName,
+            location: agent_details.agentTerminal.location,
+            terminal: agent_details.terminal.serialNo,
             amount: `₦${formatCurrency(amount)}`,
             cardNo: '53998388*****0022',
             expiry: '05/26',

@@ -5,12 +5,17 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
+    Alert,
+    ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNav';
 import {RouteProp} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import basicService from '../redux/basic/basicService';
+import {getAgent} from '../redux/basic/basicSlice';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, 'ChangePin'>;
@@ -18,15 +23,54 @@ interface Props {
 }
 
 const ChangePin: React.FC<Props> = ({navigation, route}) => {
-    const loading = false;
-
     const params = route.params.type;
+
+    const dispatch = useAppDispatch();
+
+    const {agent_details} = useAppSelector(state => state.basic);
 
     const [oldPin, setOldPin] = useState('');
     const [newPin, setNewPin] = useState('');
     const [confirmPin, setConfirmPin] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const submitHandler = () => {};
+    const submitHandler = async () => {
+        if (oldPin && newPin && confirmPin) {
+            if (newPin === confirmPin) {
+                let data = {
+                    serialNo: agent_details.terminal.serialNo,
+                    pin: oldPin,
+                    newPin,
+                };
+                try {
+                    setLoading(true);
+                    const res = await basicService.changePin(data);
+                    if (res) {
+                        dispatch(getAgent({id: agent_details.terminal.id}));
+                        navigation.navigate('Dashboard');
+                        ToastAndroid.show(
+                            'PIN has been changed successfully',
+                            ToastAndroid.SHORT,
+                        );
+                    }
+                    setLoading(false);
+                } catch (error: any) {
+                    setLoading(false);
+                    const message =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    if (message) ToastAndroid.show(message, ToastAndroid.SHORT);
+                }
+            } else {
+                Alert.alert('', 'PINs does not match');
+            }
+        }
+    };
+
+    const transactionHandler = () => {};
 
     return (
         <View style={{flex: 1, backgroundColor: '#0037ba'}}>
@@ -93,7 +137,12 @@ const ChangePin: React.FC<Props> = ({navigation, route}) => {
                                 <TouchableOpacity
                                     activeOpacity={0.8}
                                     style={styles.btn}
-                                    onPress={submitHandler}>
+                                    disabled={loading}
+                                    onPress={
+                                        params === 'Lock'
+                                            ? submitHandler
+                                            : transactionHandler
+                                    }>
                                     <Text
                                         style={[
                                             styles.textBold,
@@ -102,7 +151,7 @@ const ChangePin: React.FC<Props> = ({navigation, route}) => {
                                                 marginRight: 10,
                                             },
                                         ]}>
-                                        Change
+                                        {loading ? 'Please Wat...' : 'Change'}
                                     </Text>
                                 </TouchableOpacity>
                             </View>

@@ -9,7 +9,7 @@ import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation/RootNav';
-import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {useAppDispatch} from '../redux/hooks';
 import {logout} from '../redux/basic/basicSlice';
 
 interface Props {
@@ -18,10 +18,6 @@ interface Props {
 
 const Settings: React.FC<Props> = ({navigation}) => {
     const dispatch = useAppDispatch();
-
-    const {agent_details} = useAppSelector(state => state.basic);
-
-    console.log(agent_details, 'Agent Details');
 
     return (
         <View style={{flex: 1, backgroundColor: '#0037ba'}}>

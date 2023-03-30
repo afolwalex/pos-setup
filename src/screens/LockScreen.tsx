@@ -4,7 +4,6 @@ import {
     View,
     TouchableOpacity,
     ActivityIndicator,
-    ToastAndroid,
     NativeModules,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -26,7 +25,7 @@ interface Props {
 const LockScreen: React.FC<Props> = ({navigation}) => {
     const dispatch = useAppDispatch();
 
-    const {loading, agent_details} = useAppSelector(state => state.basic);
+    const {loading} = useAppSelector(state => state.basic);
 
     const [openModal, setOpenModal] = useState(false);
     const [pin, setPin] = useState('');
