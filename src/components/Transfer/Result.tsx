@@ -26,18 +26,16 @@ const Result: React.FC<Props> = ({navigation, amount}) => {
             location: 'Motorways, 7UP Bustop, Ikeja, Lagos',
             terminal: '240429490244',
             amount: `₦${formatCurrency(amount)}`,
-            cardNo: '53998388*****0022',
-            expiry: '05/26',
-            cardName: 'Bukola Tosin',
+            recipient: 'Tunde Bakare',
+            recipientBank: 'PatrickGold Microfinance Bank',
+            accountNo: '123456789',
             dateTime: '2023-03-09 09:24:09',
-            stan: '01234775',
-            aid: 'A0000000004321',
-            rrn: '0048588889288',
-            message: 'TRANSACTION APPROVED',
+            reference: '0dwfd1234775',
+            message: 'TRANSACTION SUCCESSFUL',
             responseCode: '00',
             authorizeCode: '839293',
         };
-        NativeModules.MorefunReactModule.print(data).then(
+        NativeModules.MorefunReactModule.printTransfer(data).then(
             (data: any) => {
                 setLoad(false);
                 if (forWho === 'customer') {

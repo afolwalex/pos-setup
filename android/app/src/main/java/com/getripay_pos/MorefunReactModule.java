@@ -174,8 +174,6 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
             list.add(new MulPrintStrEntity(name, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
             list.add(new MulPrintStrEntity("LOCATION:", fontSize).setGravity(Gravity.LEFT));
             list.add(new MulPrintStrEntity(location, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
-            // list.add(new MulPrintStrEntity("TERMINAL ID:", fontSize).setGravity(Gravity.LEFT));
-            // list.add(new MulPrintStrEntity(terminal, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
             list.add(new MulPrintStrEntity("TERMINAL ID:" + " " + terminal, fontSize).setGravity(Gravity.LEFT));
 
             list.add(new MulPrintStrEntity("=============================", fontSizeLg));
@@ -200,15 +198,243 @@ public class MorefunReactModule extends ReactContextBaseJavaModule {
             list.add(new MulPrintStrEntity("--------------------------------------", fontSize));
             list.add(new MulPrintStrEntity("Thanks for using Getripay POS", FontFamily.MIDDLE).setGravity(Gravity.CENTER));
             list.add(new MulPrintStrEntity("---X---X---X---X---X--X--X--X--X--X--X-\n", fontSizeLg));
-            list.add(new MulPrintStrEntity("\n", fontSize));
+            list.add(new MulPrintStrEntity("\n", fontSize).setYspace(60));
 
             JSONObject json = new JSONObject();
+            
+            DeviceHelper.getPrinter().printStr(list, new OnPrintListener.Stub() {
+                @Override
+                public void onPrintResult(int result) throws RemoteException {
+                    try {
+                        json.put("Completed", "Yes");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    promise.resolve(json.toString());
+                }
+            }, config);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+    }
 
-//            if (printData != null && printData.size() > 0) {
-//                for (int i = 0; i < printData.size(); i++) {
-//                    list.add(new MulPrintStrEntity(printData.getString(i), fontSizeLg));
-//                }
-//            }
+    @ReactMethod
+    public void printTransfer(ReadableMap readableMap, Promise promise) {
+        Log.d("TAG", "###print>>>");
+        try {
+            String forWho = readableMap.getString("forWho");
+            String name = readableMap.getString("name");
+            String location = readableMap.getString("location");
+            String terminal = readableMap.getString("terminal");
+            String amount = readableMap.getString("amount");
+            String recipient = readableMap.getString("recipient");
+            String recipientBank = readableMap.getString("recipientBank");
+            String accountNo = readableMap.getString("accountNo");
+            String reference = readableMap.getString("reference");
+            String dateTime = readableMap.getString("dateTime");
+            String message = readableMap.getString("message");
+            String responseCode = readableMap.getString("responseCode");
+            String authorizeCode = readableMap.getString("authorizeCode");
+
+            List<MulPrintStrEntity> list = new ArrayList<>();
+            int fontSizeLg = FontFamily.MIDDLE;
+            int fontSize = FontFamily.SMALL;
+            int fontSizeBg = FontFamily.BIG;
+            Bundle config = new Bundle();
+            config.putInt(PrinterConfig.COMMON_GRAYLEVEL, 30);
+
+            MulPrintStrEntity entity = new MulPrintStrEntity(forWho, fontSizeLg);
+            Bitmap imageFromAssetsFile = getImageFromAssetsFile(this, "logo.bmp");
+            entity.setBitmap(imageFromAssetsFile);
+            entity.setMarginX(20);
+            entity.setGravity(Gravity.CENTER);
+            entity.setUnderline(true);
+            entity.setYspace(10);
+            list.add(entity);
+
+            list.add(new MulPrintStrEntity("MERCHANT NAME:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(name, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("LOCATION:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(location, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("TERMINAL ID:" + " " + terminal, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("Date/Time:" + " " + dateTime, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Amount:" + " " + amount, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Recipient:" + " " + recipient, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Bank:" + " " + recipientBank, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Account Number:" + " " + accountNo, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Authorization Code:" + " " + authorizeCode, fontSizeLg).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity(message, fontSizeLg).setGravity(Gravity.CENTER).setIsBold(2).setYspace(10));
+            list.add(new MulPrintStrEntity("RESPONSE CODE:" + " " + responseCode, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("--------------------------------------", fontSize));
+            list.add(new MulPrintStrEntity("Thanks for using Getripay POS", FontFamily.MIDDLE).setGravity(Gravity.CENTER));
+            list.add(new MulPrintStrEntity("---X---X---X---X---X--X--X--X--X--X--X-\n", fontSizeLg));
+            list.add(new MulPrintStrEntity("\n", fontSize).setYspace(60));
+
+            JSONObject json = new JSONObject();
+            
+            DeviceHelper.getPrinter().printStr(list, new OnPrintListener.Stub() {
+                @Override
+                public void onPrintResult(int result) throws RemoteException {
+                    try {
+                        json.put("Completed", "Yes");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    promise.resolve(json.toString());
+                }
+            }, config);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void printBill(ReadableMap readableMap, Promise promise) {
+        Log.d("TAG", "###print>>>");
+        try {
+            String forWho = readableMap.getString("forWho");
+            String name = readableMap.getString("name");
+            String location = readableMap.getString("location");
+            String terminal = readableMap.getString("terminal");
+            String amount = readableMap.getString("amount");
+            String billType = readableMap.getString("billType");
+            String reference = readableMap.getString("reference");
+            String dateTime = readableMap.getString("dateTime");
+            String message = readableMap.getString("message");
+            String responseCode = readableMap.getString("responseCode");
+            String authorizeCode = readableMap.getString("authorizeCode");
+
+            List<MulPrintStrEntity> list = new ArrayList<>();
+            int fontSizeLg = FontFamily.MIDDLE;
+            int fontSize = FontFamily.SMALL;
+            int fontSizeBg = FontFamily.BIG;
+            Bundle config = new Bundle();
+            config.putInt(PrinterConfig.COMMON_GRAYLEVEL, 30);
+
+            MulPrintStrEntity entity = new MulPrintStrEntity(forWho, fontSizeLg);
+            Bitmap imageFromAssetsFile = getImageFromAssetsFile(this, "logo.bmp");
+            entity.setBitmap(imageFromAssetsFile);
+            entity.setMarginX(20);
+            entity.setGravity(Gravity.CENTER);
+            entity.setUnderline(true);
+            entity.setYspace(10);
+            list.add(entity);
+
+            list.add(new MulPrintStrEntity("MERCHANT NAME:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(name, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("LOCATION:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(location, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("TERMINAL ID:" + " " + terminal, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("DATE/TIME:" + " " + dateTime, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("AMOUNT:" + " " + amount, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("BILL:" + " " + billType, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("REFERENCE:" + " " + reference, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("AUTHORIZATION CODE:" + " " + authorizeCode, fontSizeLg).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity(message, fontSizeLg).setGravity(Gravity.CENTER).setIsBold(2).setYspace(10));
+            list.add(new MulPrintStrEntity("RESPONSE CODE:" + " " + responseCode, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("--------------------------------------", fontSize));
+            list.add(new MulPrintStrEntity("Thanks for using Getripay POS", FontFamily.MIDDLE).setGravity(Gravity.CENTER));
+            list.add(new MulPrintStrEntity("---X---X---X---X---X--X--X--X--X--X--X-\n", fontSizeLg));
+            list.add(new MulPrintStrEntity("\n", fontSize).setYspace(60));
+
+            JSONObject json = new JSONObject();
+            
+            DeviceHelper.getPrinter().printStr(list, new OnPrintListener.Stub() {
+                @Override
+                public void onPrintResult(int result) throws RemoteException {
+                    try {
+                        json.put("Completed", "Yes");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    promise.resolve(json.toString());
+                }
+            }, config);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void printBalance(ReadableMap readableMap, Promise promise) {
+        Log.d("TAG", "###print>>>");
+        try {
+            String forWho = readableMap.getString("forWho");
+            String name = readableMap.getString("name");
+            String location = readableMap.getString("location");
+            String terminal = readableMap.getString("terminal");
+            String availableBalance = readableMap.getString("availableBalance");
+            String ledgerBalance = readableMap.getString("ledgerBalance");
+            String accountNo = readableMap.getString("accountNo");
+            String bank = readableMap.getString("bank");
+            String responseCode = readableMap.getString("responseCode");
+            String authorizeCode = readableMap.getString("authorizeCode");
+            String dateTime = readableMap.getString("dateTime");
+
+            List<MulPrintStrEntity> list = new ArrayList<>();
+            int fontSizeLg = FontFamily.MIDDLE;
+            int fontSize = FontFamily.SMALL;
+            int fontSizeBg = FontFamily.BIG;
+            Bundle config = new Bundle();
+            config.putInt(PrinterConfig.COMMON_GRAYLEVEL, 30);
+
+            MulPrintStrEntity entity = new MulPrintStrEntity(forWho, fontSizeLg);
+            Bitmap imageFromAssetsFile = getImageFromAssetsFile(this, "logo.bmp");
+            entity.setBitmap(imageFromAssetsFile);
+            entity.setMarginX(20);
+            entity.setGravity(Gravity.CENTER);
+            entity.setUnderline(true);
+            entity.setYspace(10);
+            list.add(entity);
+
+            list.add(new MulPrintStrEntity("MERCHANT NAME:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(name, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("LOCATION:", fontSize).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity(location, fontSizeLg).setGravity(Gravity.LEFT).setYspace(10));
+            list.add(new MulPrintStrEntity("TERMINAL ID:" + " " + terminal, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("Date/Time:" + " " + dateTime, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Available Balance:" + " " + availableBalance, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Ledger Balance:" + " " + ledgerBalance, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Bank:" + " " + bank, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Account Number:" + " " + accountNo, fontSizeLg).setGravity(Gravity.LEFT));
+            list.add(new MulPrintStrEntity("Authorization Code:" + " " + authorizeCode, fontSizeLg).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("RESPONSE CODE:" + " " + responseCode, fontSize).setGravity(Gravity.LEFT));
+
+            list.add(new MulPrintStrEntity("=============================", fontSizeLg));
+
+            list.add(new MulPrintStrEntity("--------------------------------------", fontSize));
+            list.add(new MulPrintStrEntity("Thanks for using Getripay POS", FontFamily.MIDDLE).setGravity(Gravity.CENTER));
+            list.add(new MulPrintStrEntity("---X---X---X---X---X--X--X--X--X--X--X-\n", fontSizeLg));
+            list.add(new MulPrintStrEntity("\n", fontSize).setYspace(60));
+
+            JSONObject json = new JSONObject();
             
             DeviceHelper.getPrinter().printStr(list, new OnPrintListener.Stub() {
                 @Override

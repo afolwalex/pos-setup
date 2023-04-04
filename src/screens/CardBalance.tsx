@@ -1,5 +1,11 @@
-import {ScrollView, StyleSheet, View, NativeModules} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {
+    ScrollView,
+    StyleSheet,
+    View,
+    NativeModules,
+    ToastAndroid,
+} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import InsertCard from '../components/CardBalance/InsertCard';
 import {RootStackParamList} from '../navigation/RootNav';
@@ -11,12 +17,52 @@ interface Props {
 }
 
 const CardBalance: React.FC<Props> = ({navigation}) => {
+    let timer = useRef<number | any>(undefined);
+
     const [step, setStep] = useState(1);
     const [load, setLoad] = useState(false);
+    const [counter, setCounter] = useState(0);
+
+    const details = {
+        availableBalance: 2000,
+        ledgerBalance: 2005,
+        bank: 'PatrickGold Microfinance Bank',
+        accountNo: '01239939939',
+    };
+
+    useEffect(() => {
+        if (!timer.current) {
+            timer.current = setInterval(() => {
+                setCounter(prev => {
+                    if (prev < 100) {
+                        return prev + 5;
+                    }
+                    if (prev === 100) {
+                        clearInterval(timer.current);
+                    }
+                    return prev;
+                });
+            }, 1000);
+        }
+
+        return () => {
+            clearInterval(timer.current);
+        };
+    }, []);
 
     useEffect(() => {
         checkCard();
     }, []);
+
+    useEffect(() => {
+        if (counter === 100 && step === 1) {
+            navigation.goBack();
+            ToastAndroid.show(
+                'Request took too long. Please try again!',
+                ToastAndroid.LONG,
+            );
+        }
+    }, [counter]);
 
     const checkAgain = () => {
         setTimeout(() => {
@@ -89,6 +135,7 @@ const CardBalance: React.FC<Props> = ({navigation}) => {
                         />
                     ) : step === 3 ? (
                         <Receipt
+                            results={details}
                             navigation={() => navigation.navigate('Dashboard')}
                         />
                     ) : (

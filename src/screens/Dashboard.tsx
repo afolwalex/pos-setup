@@ -125,7 +125,7 @@ const Dashboard: React.FC<Props> = ({navigation}) => {
                                 ]}>
                                 {showAccount
                                     ? agent_details.agentTerminal.accountNumber
-                                    : '0000000000'}
+                                    : '**********'}
                             </Text>
                             <Feather
                                 name={showAccount ? 'eye' : 'eye-off'}

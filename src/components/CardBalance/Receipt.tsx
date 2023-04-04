@@ -1,12 +1,52 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    NativeModules,
+} from 'react-native';
+import React, {useState} from 'react';
 import Logo from '../../assets/logo.svg';
+import {useAppSelector} from '../../redux/hooks';
+import formatCurrency from '../../utils/formatCurrency';
 
 interface Props {
     navigation: any;
+    results: any;
 }
 
-const Receipt: React.FC<Props> = ({navigation}) => {
+const Receipt: React.FC<Props> = ({navigation, results}) => {
+    const [load, setLoad] = useState(false);
+
+    const {agent_details} = useAppSelector(state => state.basic);
+
+    const printHandler = () => {
+        setLoad(true);
+        let data = {
+            forWho: 'Account Balance',
+            name: agent_details.agent.businessName,
+            location: agent_details.agentTerminal.location,
+            terminal: agent_details.terminal.serialNo,
+            availableBalance: `₦${formatCurrency(results.availableBalance)}`,
+            ledgerBalance: `₦${formatCurrency(results.ledgerBalance)}`,
+            accountNo: results.accountNo,
+            bank: results.bank,
+            responseCode: '00',
+            authorizeCode: '839293',
+            dateTime: '2023-03-09 09:24:09',
+        };
+        NativeModules.MorefunReactModule.printBalance(data).then(
+            (data: any) => {
+                setLoad(false);
+                navigation();
+            },
+            (error: any) => {
+                console.log(error);
+                setLoad(false);
+            },
+        );
+    };
+
     return (
         <View style={{flex: 1}}>
             <View style={{flex: 4}}>
@@ -101,9 +141,11 @@ const Receipt: React.FC<Props> = ({navigation}) => {
                 }}>
                 <TouchableOpacity
                     style={[styles.btn, {backgroundColor: '#0037BA'}]}
+                    disabled={load}
+                    onPress={printHandler}
                     activeOpacity={0.8}>
                     <Text style={[styles.btnText, {color: '#FFFFFF'}]}>
-                        Print Receipt
+                        {load ? 'Printing...' : 'Print Receipt'}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.btn]}>

@@ -7,6 +7,7 @@ import {RootStackParamList} from '../navigation/RootNav';
 import InsertCard from '../components/Withdrawal/InsertCard';
 import EnterPin from '../components/Withdrawal/EnterPin';
 import Result from '../components/Withdrawal/Result';
+import withdrawService from '../redux/withdraw/withdrawService';
 
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, 'Withdraw'>;
@@ -26,12 +27,21 @@ const Withdraw: React.FC<Props> = ({navigation}) => {
         setStep(3);
     };
 
-    const withdrawHandler = (pin: string) => {
-        setLoad(true);
-        setTimeout(() => {
-            setLoad(false);
+    const withdrawHandler = async (pin: string) => {
+        try {
+            let data = {
+                cardNumber: '1234848399292',
+                accountType: 'savings',
+                amount,
+                pin: '1234',
+            };
+            setLoad(true);
+            const res = await withdrawService.cardWithdrawal(data);
             setStep(4);
-        }, 2000);
+        } catch (err: any) {
+            console.log(err.response);
+            setLoad(false);
+        }
     };
 
     return (

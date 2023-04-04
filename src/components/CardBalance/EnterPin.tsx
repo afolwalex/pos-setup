@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Keyboard from '../Keyboard';
 import Loader from '../Loader';
 
@@ -18,6 +19,7 @@ interface Props {
 
 const EnterPin: React.FC<Props> = ({navigation, proceed, load}) => {
     const [pin, setPin] = useState('');
+    const [showKeyboard, setShowKeyboard] = useState(false);
 
     const keyboardValue = (val: string) => {
         if (pin) {
@@ -44,23 +46,44 @@ const EnterPin: React.FC<Props> = ({navigation, proceed, load}) => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     paddingTop: 10,
+                    justifyContent: 'space-between',
                 }}>
                 <TouchableOpacity activeOpacity={0.8} onPress={navigation}>
-                    <AntDesign name="arrowleft" color={'#000'} size={20} />
+                    <AntDesign name="arrowleft" color={'#000'} size={24} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => setShowKeyboard(!showKeyboard)}>
+                    <MaterialCommunityIcons
+                        name={showKeyboard ? 'keyboard' : 'keyboard-off'}
+                        size={24}
+                        color="#000"
+                    />
                 </TouchableOpacity>
             </View>
-            <View style={styles.body}>
+            <View style={[styles.body, {marginTop: showKeyboard ? 0 : 20}]}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                     <Text style={styles.textSemi}>Enter Card PIN</Text>
                 </View>
                 <View style={styles.inputField}>
-                    <View style={{marginTop: 5, width: '50%'}}>
+                    <View
+                        style={{
+                            marginTop: 5,
+                            width: '50%',
+                        }}>
                         <TextInput
                             value={pin}
                             onChangeText={text => setPin(text)}
                             keyboardType="number-pad"
                             showSoftInputOnFocus={false}
-                            style={styles.input}
+                            style={[
+                                styles.input,
+                                {
+                                    borderBottomColor: showKeyboard
+                                        ? 'rgba(0,0,0,0.04)'
+                                        : 'rgba(0,0,0,0.1)',
+                                },
+                            ]}
                             autoFocus={true}
                             secureTextEntry={true}
                             maxLength={4}
@@ -68,11 +91,13 @@ const EnterPin: React.FC<Props> = ({navigation, proceed, load}) => {
                         />
                     </View>
                 </View>
-                <Keyboard
-                    keyboardValue={keyboardValue}
-                    clearInput={clearInput}
-                    enterValue={submitHandler}
-                />
+                {showKeyboard && (
+                    <Keyboard
+                        keyboardValue={keyboardValue}
+                        clearInput={clearInput}
+                        enterValue={submitHandler}
+                    />
+                )}
                 <View style={styles.bottom}>
                     <TouchableOpacity
                         activeOpacity={0.8}
@@ -96,7 +121,10 @@ const EnterPin: React.FC<Props> = ({navigation, proceed, load}) => {
 export default EnterPin;
 
 const styles = StyleSheet.create({
-    body: {},
+    body: {
+        position: 'relative',
+        flex: 1,
+    },
     textBold: {
         fontFamily: 'Inter-Bold',
         color: '#1F1F1F',
@@ -109,25 +137,28 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     input: {
-        borderBottomColor: 'rgba(0,0,0,0.01)',
         borderBottomWidth: 1,
         fontSize: 25,
         width: '100%',
         textAlign: 'center',
     },
-    inputField: {alignItems: 'center'},
+    inputField: {
+        alignItems: 'center',
+    },
     btn: {
         backgroundColor: '#0037ba',
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         paddingHorizontal: 50,
         paddingVertical: 10,
         borderRadius: 20,
     },
     bottom: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 15,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        left: 0,
     },
     text: {
         fontFamily: 'Inter-Medium',
